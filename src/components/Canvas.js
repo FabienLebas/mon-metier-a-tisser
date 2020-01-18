@@ -20,77 +20,118 @@ export default class Canvas extends Component {
         ["default", "default", "default", "default", "default", "default", "default"],
         ["default", "default", "default", "default", "default", "default", "default"]
       ],
-      defaultColor: "black"
+      defaultColor: "black",
+      nextColor: "gold"
     }
   }
 
-  handleChangeColumns = (event) => {
-    const valueInput = parseInt(event.target.value, 10);
-    const initialNbColumns = this.state.matrix[0].length;
-    if ( valueInput > 1 && valueInput < initialNbColumns){ //decrease
-      const newMatrix = this.state.matrix.map(line => line.slice(0,valueInput));
-      this.setState({
-        columnsInput: valueInput,
-        matrix: newMatrix
-      })
-    } else if (valueInput > 1 && valueInput > initialNbColumns) { //increase
-      const newMatrix = this.state.matrix.map(line => this.addColumns(line, valueInput - initialNbColumns));
-      this.setState({
-        columnsInput: valueInput,
-        matrix: newMatrix
-      })
+  addColumn = (side) => {
+    let newMatrix = this.state.matrix;
+    if (side === "left"){
+      newMatrix = newMatrix.map(line => ["default"].concat(line))
+    } else if (side === "right") {
+      newMatrix = newMatrix.map(line => line.concat(["defaul"]))
     }
-    else {
-      this.setState({
-        columnsInput: valueInput
-      })
-    }
+    this.setState({
+      matrix: newMatrix
+    })
   }
 
-  addColumns = (line, numberOfColumnsToAdd) => {
-    const result = line;
-    for (let i = 0; i < numberOfColumnsToAdd; i++){
-      result.push("default");
+  removeColumn = (side) => {
+    let newMatrix = this.state.matrix;
+    if (side === "left"){
+      newMatrix = newMatrix.map(line => {
+        line.shift();
+        return line;
+      })
+    } else if (side === "right") {
+      newMatrix = newMatrix.map(line => {
+        line.pop();
+        return line;
+      } )
     }
-    return result;
+    this.setState({
+      matrix: newMatrix
+    })
   }
 
-  handleChangeLines = (event) => {
-    const valueInput = parseInt(event.target.value, 10);
-    const initalNbLines = this.state.matrix.length;
-    if ( valueInput > 1 && valueInput < initalNbLines){ //decrease
-      const newMatrix = this.state.matrix.slice(0, valueInput);
-      this.setState({
-        matrix: newMatrix,
-        linesInput: valueInput
-      })
-    } else if (valueInput > 1 && valueInput > initalNbLines) { //increase
-      const newLine = [];
-      for (let j = 0; j < this.state.matrix[0].length; j++){
-        newLine.push("default");
-      }
-      const newMatrix = this.state.matrix;
-      for (let i = 0; i < valueInput - initalNbLines; i++){
-        newMatrix.push([...newLine]);
-      }
-      this.setState({
-        matrix: newMatrix,
-        linesInput: valueInput
-      })
+  addLine = (side) => {
+    let newMatrix = this.state.matrix;
+    let newLine = [];
+    for (let i = 0; i < this.state.matrix[0].length; i++){
+      newLine.push("default");
     }
-    else {
-      this.setState({
-        linesInput: valueInput
-      })
+    if (side === "top"){
+      newMatrix.unshift(newLine);
+    } else if (side === "bottom") {
+      newMatrix.push(newLine);
     }
+    this.setState({
+      matrix: newMatrix
+    })
+  }
+
+  removeLine = (side) => {
+    let newMatrix = this.state.matrix;
+    if (side === "top"){
+      newMatrix.shift();
+    } else if (side === "bottom") {
+      newMatrix.pop();
+    }
+    this.setState({
+      matrix: newMatrix
+    })
+  }
+
+  handleChangeDefaultColor = (event) => {
+    this.setState({
+      defaultColor: event.target.value
+    })
+  }
+
+  handleChangeNextColor = (event) => {
+    this.setState({
+      nextColor: event.target.value
+    })
   }
 
   drawLineMatrix = (line, indexLine) => {
-    return(
-      <Row key={indexLine}>
-        {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-      </Row>
-    )
+    switch(indexLine){
+      case 0:
+        return (
+          <Row key={indexLine}>
+            {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
+            <span onClick={(event) => this.addLine("top")}>+</span>
+          </Row>
+        )
+      case 1:
+        return(
+          <Row key={indexLine}>
+            {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
+            <span onClick={(event) => this.removeLine("top")}>-</span>
+          </Row>
+        )
+      case this.state.matrix.length - 2:
+        return(
+          <Row key={indexLine}>
+            {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
+            <span onClick={(event) => this.removeLine("bottom")}>-</span>
+          </Row>
+        )
+      case this.state.matrix.length -1:
+        return(
+          <Row key={indexLine}>
+            {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
+            <span onClick={(event) => this.addLine("bottom")}>+</span>
+          </Row>
+        )
+      default:
+        return(
+          <Row key={indexLine}>
+            {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
+          </Row>
+        )
+    }
   }
 
   drawPerle = (perleColor, indexColumn, indexLine) => {
@@ -99,12 +140,11 @@ export default class Canvas extends Component {
       myColor = perleColor;
     }
     return(
-      <Col key={indexColumn} style={{color: myColor}} onClick={(event) => this.changeColor(indexColumn, indexLine, "blue")}>O</Col>
+      <div key={indexColumn} style={{color: myColor}} className="perle" onClick={(event) => this.changePerleColor(indexColumn, indexLine, this.state.nextColor)}>O</div>
     )
   }
 
-  changeColor = (indexColumn, indexLine, newColor) => {
-    console.log(`changeColor for column ${indexColumn} and line ${indexLine}`);
+  changePerleColor = (indexColumn, indexLine, newColor) => {
     const newMatrix = this.state.matrix;
     newMatrix[indexLine][indexColumn] = newColor;
     this.setState({
@@ -113,19 +153,39 @@ export default class Canvas extends Component {
   }
 
   render(){
-    console.log(this.state.matrix);
     return(
       <div>
-        <div>
-          <label htmlFor="columns">Nombre de colonnes dans le bracelet :</label>
-          <input type="number" id="columns" name="columns" min="1" max="20" value={this.state.columnsInput} onChange={this.handleChangeColumns}></input>
-        </div>
-        <div>
-          <label htmlFor="lines">Longueur du bracelet (en nombre de perles) :</label>
-          <input type="number" id="lines" name="lines" min="10" max="1000" value={this.state.linesInput} onChange={this.handleChangeLines}></input>
-        </div>
         <Container>
-          {this.state.matrix.map((line, index) => this.drawLineMatrix(line, index))}
+          <Row>
+            <Col className="offset-1">
+              <Row>
+                <Col className="col-4">
+                  <Row>
+                    <span onClick={(event) => this.addColumn("left")}>+</span>
+                    <span onClick={(event) => this.removeColumn("left")}>-</span>
+                  </Row>
+                </Col>
+                <Col className="col-4 offset-2">
+                  <Row>
+                    <span onClick={(event) => this.removeColumn("right")}>-</span>
+                    <span onClick={(event) => this.addColumn("right")}>+</span>
+                  </Row>
+                </Col>
+              </Row>
+              {this.state.matrix.map((line, index) => this.drawLineMatrix(line, index))}
+            </Col>
+
+            <Col>
+              <div>
+                <label htmlFor="defaultColor">Couleur par défaut :</label>
+                <input type="text" id="defaultColor" name="defaultColor" value={this.state.defaultColor} onChange={this.handleChangeDefaultColor}></input>
+              </div>
+              <div>
+                <label htmlFor="nextColor">Prochaine perle :</label>
+                <input type="text" id="nextColor" name="nextColor" value={this.state.nextColor} onChange={this.handleChangeNextColor}></input>
+              </div>
+            </Col>
+          </Row>
         </Container>
       </div>
     )
