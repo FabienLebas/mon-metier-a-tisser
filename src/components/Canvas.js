@@ -19,7 +19,8 @@ export default class Canvas extends Component {
         ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"]
       ],
       defaultColor: "black",
-      nextColor: "gold"
+      nextColor: "gold",
+      history: []
     }
   }
 
@@ -138,16 +139,30 @@ export default class Canvas extends Component {
       myColor = perleColor;
     }
     return(
-      <div key={indexColumn} style={{color: myColor}} className="perle" onClick={(event) => this.changePerleColor(indexColumn, indexLine, this.state.nextColor)}>O</div>
+      <div key={indexColumn} style={{color: myColor}} className="perle" onClick={(event) => this.changePerleColor(indexColumn, indexLine, this.state.nextColor, true)}>O</div>
     )
   }
 
-  changePerleColor = (indexColumn, indexLine, newColor) => {
+  changePerleColor = (indexColumn, indexLine, newColor, saveInHistory) => {
+    if (saveInHistory){
+      this.state.history.push({
+        indexColumn: indexColumn,
+        indexLine: indexLine,
+        oldColor: this.state.matrix[indexLine][indexColumn]
+      })
+    }
+
     const newMatrix = this.state.matrix;
     newMatrix[indexLine][indexColumn] = newColor;
     this.setState({
       matrix: newMatrix
     })
+  }
+
+  undo = () => {
+    const lastAction = this.state.history[this.state.history.length - 1];
+    this.changePerleColor(lastAction.indexColumn, lastAction.indexLine, lastAction.oldColor, false);
+    this.state.history.pop();
   }
 
   handleChangeCompleteNextColor = (color, event) => {
@@ -182,6 +197,8 @@ export default class Canvas extends Component {
     )
   }
 
+
+
   render(){
     return(
       <div>
@@ -213,6 +230,7 @@ export default class Canvas extends Component {
               <div data-toggle="modal" data-target="#nextColorModal">
                 Prochaine  <span className="colorSample" style={{color: this.state.nextColor}}>O</span>
               </div>
+              <i class="fas fa-undo" onClick={this.undo}></i>
             </Col>
           </Row>
         </Container>
