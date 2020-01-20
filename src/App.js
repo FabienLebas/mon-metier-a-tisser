@@ -6,8 +6,7 @@ import Canvas from './components/Canvas';
 
 function App() {
   return (
-    <div className="App">
-      <h1>Mon Métier à Tisser</h1>
+    <div className="Mon métier à tisser">
       <Canvas></Canvas>
     </div>
   );

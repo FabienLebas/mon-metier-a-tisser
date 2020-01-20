@@ -1,24 +1,22 @@
-import React, { Component } from 'react';
+import React, { Component} from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
+import { SwatchesPicker } from 'react-color';
 
 export default class Canvas extends Component {
   constructor(props){
     super(props);
     this.state={
-      columnsToDraw: 7,
-      columnsInput: 7,
-      linesInput: 9,
       matrix:[
-        ["default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default"]
+        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
+        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
+        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
+        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
+        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
+        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
+        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
+        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
+        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
+        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"]
       ],
       defaultColor: "black",
       nextColor: "gold"
@@ -28,9 +26,9 @@ export default class Canvas extends Component {
   addColumn = (side) => {
     let newMatrix = this.state.matrix;
     if (side === "left"){
-      newMatrix = newMatrix.map(line => ["default"].concat(line))
+      newMatrix = newMatrix.map(line => [this.state.defaultColor].concat(line))
     } else if (side === "right") {
-      newMatrix = newMatrix.map(line => line.concat(["defaul"]))
+      newMatrix = newMatrix.map(line => line.concat([this.state.defaultColor]))
     }
     this.setState({
       matrix: newMatrix
@@ -59,7 +57,7 @@ export default class Canvas extends Component {
     let newMatrix = this.state.matrix;
     let newLine = [];
     for (let i = 0; i < this.state.matrix[0].length; i++){
-      newLine.push("default");
+      newLine.push(this.state.defaultColor);
     }
     if (side === "top"){
       newMatrix.unshift(newLine);
@@ -152,9 +150,42 @@ export default class Canvas extends Component {
     })
   }
 
+  handleChangeCompleteNextColor = (color, event) => {
+    this.setState({ nextColor: color.hex });
+  };
+
+  handleChangeCompleteDefaultColor = (color, event) => {
+    this.setState({ defaultColor: color.hex });
+  };
+
+  displayModal = (modalName, functionWhenSelected, textTitle) => {
+    const label = modalName + "Label";
+    return(
+      <div className="modal fade" id={modalName} tabindex="-1" role="dialog" aria-labelledby={label} aria-hidden="true">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id={label}>{textTitle}</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <SwatchesPicker onChangeComplete={ functionWhenSelected }/>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   render(){
     return(
       <div>
+        <h2 className="text-center">Création</h2>
         <Container>
           <Row>
             <Col className="offset-1">
@@ -175,18 +206,18 @@ export default class Canvas extends Component {
               {this.state.matrix.map((line, index) => this.drawLineMatrix(line, index))}
             </Col>
 
-            <Col>
-              <div>
-                <label htmlFor="defaultColor">Couleur par défaut :</label>
-                <input type="text" id="defaultColor" name="defaultColor" value={this.state.defaultColor} onChange={this.handleChangeDefaultColor}></input>
+            <Col className="col-4">
+              <div data-toggle="modal" data-target="#defaultColorModal">
+                Base <span className="colorSample" style={{color: this.state.defaultColor}}>0</span>
               </div>
-              <div>
-                <label htmlFor="nextColor">Prochaine perle :</label>
-                <input type="text" id="nextColor" name="nextColor" value={this.state.nextColor} onChange={this.handleChangeNextColor}></input>
+              <div data-toggle="modal" data-target="#nextColorModal">
+                Prochaine  <span className="colorSample" style={{color: this.state.nextColor}}>O</span>
               </div>
             </Col>
           </Row>
         </Container>
+        {this.displayModal("nextColorModal", this.handleChangeCompleteNextColor, "Prochaine perle")}
+        {this.displayModal("defaultColorModal", this.handleChangeCompleteDefaultColor, "Couleur par défaut")}
       </div>
     )
   }
