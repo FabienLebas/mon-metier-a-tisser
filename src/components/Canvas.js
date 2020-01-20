@@ -100,28 +100,28 @@ export default class Canvas extends Component {
         return (
           <Row key={indexLine}>
             {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-            <span onClick={(event) => this.addLine("top")}>+</span>
+            <span onClick={(event) => this.addLine("top")}><i class="fas fa-arrow-circle-up"></i></span>
           </Row>
         )
       case 1:
         return(
           <Row key={indexLine}>
             {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-            <span onClick={(event) => this.removeLine("top")}>-</span>
+            <span onClick={(event) => this.removeLine("top")}><i class="fas fa-arrow-circle-down"></i></span>
           </Row>
         )
       case this.state.matrix.length - 2:
         return(
           <Row key={indexLine}>
             {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-            <span onClick={(event) => this.removeLine("bottom")}>-</span>
+            <span onClick={(event) => this.removeLine("bottom")}><i class="fas fa-arrow-circle-up"></i></span>
           </Row>
         )
       case this.state.matrix.length -1:
         return(
           <Row key={indexLine}>
             {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-            <span onClick={(event) => this.addLine("bottom")}>+</span>
+            <span onClick={(event) => this.addLine("bottom")}><i class="fas fa-arrow-circle-down"></i></span>
           </Row>
         )
       default:
@@ -209,14 +209,15 @@ export default class Canvas extends Component {
               <Row>
                 <Col className="col-4">
                   <Row>
-                    <span onClick={(event) => this.addColumn("left")}>+</span>
-                    <span onClick={(event) => this.removeColumn("left")}>-</span>
+                    <span onClick={(event) => this.addColumn("left")}><i class="fas fa-arrow-circle-left"></i></span>
+
+                    <span onClick={(event) => this.removeColumn("left")}><i class="fas fa-arrow-circle-right"></i></span>
                   </Row>
                 </Col>
-                <Col className="col-4 offset-2">
+                <Col className="col-4 offset-1">
                   <Row>
-                    <span onClick={(event) => this.removeColumn("right")}>-</span>
-                    <span onClick={(event) => this.addColumn("right")}>+</span>
+                    <span onClick={(event) => this.removeColumn("right")}><i class="fas fa-arrow-circle-left"></i></span>
+                    <span onClick={(event) => this.addColumn("right")}><i class="fas fa-arrow-circle-right"></i></span>
                   </Row>
                 </Col>
               </Row>
