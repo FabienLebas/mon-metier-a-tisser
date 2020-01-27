@@ -195,6 +195,10 @@ export default class Canvas extends Component {
     )
   }
 
+  save = () => {
+    console.log("save");
+  }
+
   render(){
     return(
       <div>
@@ -217,7 +221,10 @@ export default class Canvas extends Component {
             </Col>
 
             <Col className="col-3">
-              <div className="undo">
+              <div className="icon" onClick={this.save}>
+                <i className="fas fa-cloud-upload-alt fa-lg"></i>
+              </div>
+              <div className="icon">
                 <i className="fas fa-undo" onClick={this.undo}></i>
               </div>
               <div data-toggle="modal" data-target="#defaultColorModal">
