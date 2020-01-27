@@ -6,25 +6,16 @@ export default class Canvas extends Component {
   constructor(props){
     super(props);
     this.state={
-      matrix:[
-        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"],
-        ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default"]
-      ],
-      defaultColor: "black",
+      matrix:this.props.matrix,
+      defaultColor: "grey",
       nextColor: "gold",
+      topEmptySpots: [1, 2, 3, 4, 5, 6],
       history: []
     }
   }
 
   addColumn = (side) => {
+    this.state.topEmptySpots.push(this.state.topEmptySpots.length + 1);
     let newMatrix = this.state.matrix;
     if (side === "left"){
       newMatrix = newMatrix.map(line => [this.state.defaultColor].concat(line))
@@ -37,6 +28,7 @@ export default class Canvas extends Component {
   }
 
   removeColumn = (side) => {
+    this.state.topEmptySpots.pop();
     let newMatrix = this.state.matrix;
     if (side === "left"){
       newMatrix = newMatrix.map(line => {
@@ -100,28 +92,28 @@ export default class Canvas extends Component {
         return (
           <Row key={indexLine}>
             {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-            <span onClick={(event) => this.addLine("top")}><i class="fas fa-arrow-circle-up"></i></span>
+            <div className="perle" onClick={(event) => this.addLine("top")}><i className="fas perle fa-arrow-circle-up"></i></div>
           </Row>
         )
       case 1:
         return(
           <Row key={indexLine}>
             {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-            <span onClick={(event) => this.removeLine("top")}><i class="fas fa-arrow-circle-down"></i></span>
+            <div className="perle" onClick={(event) => this.removeLine("top")}><i className="fas perle fa-arrow-circle-down"></i></div>
           </Row>
         )
       case this.state.matrix.length - 2:
         return(
           <Row key={indexLine}>
             {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-            <span onClick={(event) => this.removeLine("bottom")}><i class="fas fa-arrow-circle-up"></i></span>
+            <div className="perle" onClick={(event) => this.removeLine("bottom")}><i className="fas perle fa-arrow-circle-up"></i></div>
           </Row>
         )
       case this.state.matrix.length -1:
         return(
           <Row key={indexLine}>
             {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-            <span onClick={(event) => this.addLine("bottom")}><i class="fas fa-arrow-circle-down"></i></span>
+            <div className="perle" onClick={(event) => this.addLine("bottom")}><i className="fas perle fa-arrow-circle-down"></i></div>
           </Row>
         )
       default:
@@ -139,7 +131,7 @@ export default class Canvas extends Component {
       myColor = perleColor;
     }
     return(
-      <div key={indexColumn} style={{color: myColor}} className="perle" onClick={(event) => this.changePerleColor(indexColumn, indexLine, this.state.nextColor, true)}>O</div>
+      <div key={indexColumn} style={{background: myColor}} className="perle" onClick={(event) => this.changePerleColor(indexColumn, indexLine, this.state.nextColor, true)}></div>
     )
   }
 
@@ -197,7 +189,11 @@ export default class Canvas extends Component {
     )
   }
 
-
+  emptySpot = (key) => {
+    return(
+      <div key={key} className="perle"></div>
+    )
+  }
 
   render(){
     return(
@@ -207,31 +203,29 @@ export default class Canvas extends Component {
           <Row>
             <Col className="offset-1">
               <Row>
-                <Col className="col-4">
+                <Col >
                   <Row>
-                    <span onClick={(event) => this.addColumn("left")}><i class="fas fa-arrow-circle-left"></i></span>
-
-                    <span onClick={(event) => this.removeColumn("left")}><i class="fas fa-arrow-circle-right"></i></span>
-                  </Row>
-                </Col>
-                <Col className="col-4 offset-1">
-                  <Row>
-                    <span onClick={(event) => this.removeColumn("right")}><i class="fas fa-arrow-circle-left"></i></span>
-                    <span onClick={(event) => this.addColumn("right")}><i class="fas fa-arrow-circle-right"></i></span>
+                    <div className="perle" onClick={(event) => this.addColumn("left")}><i className="fas fa-arrow-circle-left"></i></div>
+                    <div className="perle" onClick={(event) => this.removeColumn("left")}><i className="fas perle fa-arrow-circle-right"></i></div>
+                    {this.state.topEmptySpots.map(e => this.emptySpot(e) )}
+                    <div className="perle" onClick={(event) => this.removeColumn("right")}><i className="fas perle fa-arrow-circle-left"></i></div>
+                    <div className="perle" onClick={(event) => this.addColumn("right")}><i className="fas perle fa-arrow-circle-right"></i></div>
                   </Row>
                 </Col>
               </Row>
               {this.state.matrix.map((line, index) => this.drawLineMatrix(line, index))}
             </Col>
 
-            <Col className="col-4">
+            <Col className="col-3">
+              <div className="undo">
+                <i className="fas fa-undo" onClick={this.undo}></i>
+              </div>
               <div data-toggle="modal" data-target="#defaultColorModal">
-                Base <span className="colorSample" style={{color: this.state.defaultColor}}>0</span>
+                Base <div className="perle" style={{background: this.state.defaultColor}}></div>
               </div>
               <div data-toggle="modal" data-target="#nextColorModal">
-                Prochaine  <span className="colorSample" style={{color: this.state.nextColor}}>O</span>
+                Prochaine  <div className="perle" style={{background: this.state.nextColor}}></div>
               </div>
-              <i class="fas fa-undo" onClick={this.undo}></i>
             </Col>
           </Row>
         </Container>
