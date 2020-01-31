@@ -36,3 +36,22 @@
     transform: rotate(360deg);
   }
 }
+
+.perle{
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-right: 2px;
+  margin-left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%
+}
+
+.fas{
+  display: table-row !important;
+}
+
+.icon{
+  margin-left: 2px;
+  margin-top:10px;
+}

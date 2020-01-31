@@ -5,10 +5,21 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Canvas from './components/Canvas';
 
 function App() {
+  const defaultMatrix = [
+    ["default", "default", "default", "default", "default", "default", "default", "default", "default"],
+    ["default", "default", "default", "default", "default", "default", "default", "default", "default"],
+    ["default", "default", "default", "default", "default", "default", "default", "default", "default"],
+    ["default", "default", "default", "default", "default", "default", "default", "default", "default"],
+    ["default", "default", "default", "default", "default", "default", "default", "default", "default"],
+    ["default", "default", "default", "default", "default", "default", "default", "default", "default"],
+    ["default", "default", "default", "default", "default", "default", "default", "default", "default"],
+    ["default", "default", "default", "default", "default", "default", "default", "default", "default"],
+    ["default", "default", "default", "default", "default", "default", "default", "default", "default"],
+    ["default", "default", "default", "default", "default", "default", "default", "default", "default"]
+  ];
   return (
-    <div className="App">
-      <h1>Mon Métier à Tisser</h1>
-      <Canvas></Canvas>
+    <div className="Mon métier à tisser">
+      <Canvas matrix={defaultMatrix}></Canvas>
     </div>
   );
 }
