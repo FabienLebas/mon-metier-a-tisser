@@ -7,6 +7,8 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "bootstrap": "^4.4.1",
+    "express": "^4.17.1",
+    "path": "^0.12.7",
     "react": "^16.12.0",
     "react-bootstrap": "^1.0.0-beta.16",
     "react-color": "^2.18.0",
@@ -14,9 +16,10 @@
     "react-scripts": "3.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node index.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "dev": "react-scripts start",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -33,5 +36,18 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "server.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FabienLebas/mon-metier-a-tisser.git"
+  },
+  "author": "Fabien Lebas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FabienLebas/mon-metier-a-tisser/issues"
+  },
+  "homepage": "https://github.com/FabienLebas/mon-metier-a-tisser#readme"
 }
