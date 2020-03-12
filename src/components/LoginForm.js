@@ -12,16 +12,16 @@ class LoginForm extends Component {
     }
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value
     })
   }
 
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     event.preventDefault()
     console.log('handleSubmit')
-    axios.post('/user/login', {
+    axios.post('http://localhost:4000/login', {
       username: this.state.username,
       password: this.state.password
     })
@@ -30,6 +30,8 @@ class LoginForm extends Component {
       console.log(response)
       if (response.status === 200) {
         // update App.js state
+        console.log("response");
+        console.log(response);
         this.props.updateUser({
           loggedIn: true,
           username: response.data.username
