@@ -168,7 +168,7 @@ export default class Canvas extends Component {
   displayModal = (modalName, functionWhenSelected, textTitle) => {
     const label = modalName + "Label";
     return(
-      <div className="modal fade" id={modalName} tabindex="-1" role="dialog" aria-labelledby={label} aria-hidden="true">
+      <div className="modal fade" id={modalName} tabIndex="-1" role="dialog" aria-labelledby={label} aria-hidden="true">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
