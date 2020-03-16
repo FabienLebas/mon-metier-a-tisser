@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
-import axios from 'axios'
+// import axios from 'axios'
 
 class LoginForm extends Component {
   constructor(props) {
@@ -20,23 +20,23 @@ class LoginForm extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault()
-    console.log('handleSubmit')
-    axios.post('http://localhost:4000/login', {
-      username: this.state.username,
-      password: this.state.password
+    return fetch("http://localhost:4000/login", {
+      method: 'POST',
+      headers:{
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: this.state.username,
+        password: this.state.password
+      })
     })
+    .then(response => response.json())
     .then(response => {
-      console.log('login response: ')
-      console.log(response)
-      if (response.status === 200) {
-        // update App.js state
-        console.log("response");
-        console.log(response);
+      if (response.status === '200') {
         this.props.updateUser({
           loggedIn: true,
-          username: response.data.username
+          username: response.username
         })
-        // update the state to redirect to home
         this.setState({
           redirectTo: '/'
         })
