@@ -1,6 +1,9 @@
 import React, { Component} from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
 import { SwatchesPicker } from 'react-color';
+import { Redirect } from 'react-router-dom'
+import LoginForm from "./LoginForm.js";
+import "../stylesheets/canvas.css";
 
 export default class Canvas extends Component {
   constructor(props){
@@ -10,7 +13,8 @@ export default class Canvas extends Component {
       defaultColor: "grey",
       nextColor: "gold",
       topEmptySpots: [1, 2, 3, 4, 5, 6],
-      history: []
+      history: [],
+      loginErrorMessage: false
     }
   }
 
@@ -92,28 +96,28 @@ export default class Canvas extends Component {
         return (
           <Row key={indexLine}>
             {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-            <div className="perle" onClick={(event) => this.addLine("top")}><i className="fas perle fa-arrow-circle-up"></i></div>
+            <div className="perle" onClick={(event) => this.addLine("top")}><i className="fas perle fa-arrow-circle-up clickable"></i></div>
           </Row>
         )
       case 1:
         return(
           <Row key={indexLine}>
             {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-            <div className="perle" onClick={(event) => this.removeLine("top")}><i className="fas perle fa-arrow-circle-down"></i></div>
+            <div className="perle" onClick={(event) => this.removeLine("top")}><i className="fas perle fa-arrow-circle-down clickable"></i></div>
           </Row>
         )
       case this.state.matrix.length - 2:
         return(
           <Row key={indexLine}>
             {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-            <div className="perle" onClick={(event) => this.removeLine("bottom")}><i className="fas perle fa-arrow-circle-up"></i></div>
+            <div className="perle" onClick={(event) => this.removeLine("bottom")}><i className="fas perle fa-arrow-circle-up clickable"></i></div>
           </Row>
         )
       case this.state.matrix.length -1:
         return(
           <Row key={indexLine}>
             {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-            <div className="perle" onClick={(event) => this.addLine("bottom")}><i className="fas perle fa-arrow-circle-down"></i></div>
+            <div className="perle" onClick={(event) => this.addLine("bottom")}><i className="fas perle fa-arrow-circle-down clickable"></i></div>
           </Row>
         )
       default:
@@ -189,6 +193,27 @@ export default class Canvas extends Component {
     )
   }
 
+  saveModal = () => {
+    return(
+      <div className="modal fade" id="saveModal" tabIndex="-1" role="dialog" aria-labelledby="labelSave" aria-hidden="true">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Connexion</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <p>Pour sauvegarder, j'ai besoin d'un compte utilisateur</p>
+              <LoginForm updateUser={this.props.updateUser} loginErrorMessage={this.loginErrorMessage}/>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   emptySpot = (key) => {
     return(
       <div key={key} className="perle"></div>
@@ -197,6 +222,30 @@ export default class Canvas extends Component {
 
   save = () => {
     console.log("save");
+    return(
+      <Redirect to={{ pathname: "/login" }} />
+    )
+  }
+
+  displayUser = () => {
+    if (this.props.user){
+      return (
+        <div className="row">
+          <p>{this.props.displayName}</p>
+          <i className="fas fa-power-off clickable" aria-hidden="true" onClick={this.props.logOut}></i>
+        </div>
+      )
+    }
+  }
+
+  loginErrorMessage = () => {
+    if (this.props.loginError){
+      return(
+        <div className="alert alert-danger col-ml-auto" role="alert">
+          Utilisateur / Mot de passe incorrect
+        </div>
+      )
+    }
   }
 
   render(){
@@ -209,11 +258,11 @@ export default class Canvas extends Component {
               <Row>
                 <Col >
                   <Row>
-                    <div className="perle" onClick={(event) => this.addColumn("left")}><i className="fas fa-arrow-circle-left"></i></div>
-                    <div className="perle" onClick={(event) => this.removeColumn("left")}><i className="fas perle fa-arrow-circle-right"></i></div>
+                    <div className="perle" onClick={(event) => this.addColumn("left")}><i className="fas fa-arrow-circle-left clickable"></i></div>
+                    <div className="perle" onClick={(event) => this.removeColumn("left")}><i className="fas perle fa-arrow-circle-right clickable"></i></div>
                     {this.state.topEmptySpots.map(e => this.emptySpot(e) )}
-                    <div className="perle" onClick={(event) => this.removeColumn("right")}><i className="fas perle fa-arrow-circle-left"></i></div>
-                    <div className="perle" onClick={(event) => this.addColumn("right")}><i className="fas perle fa-arrow-circle-right"></i></div>
+                    <div className="perle" onClick={(event) => this.removeColumn("right")}><i className="fas perle fa-arrow-circle-left clickable"></i></div>
+                    <div className="perle" onClick={(event) => this.addColumn("right")}><i className="fas perle fa-arrow-circle-right clickable"></i></div>
                   </Row>
                 </Col>
               </Row>
@@ -221,24 +270,26 @@ export default class Canvas extends Component {
             </Col>
 
             <Col className="col-3">
-              <p>{this.props.displayName}</p>
-              <div className="icon" onClick={this.save}>
-                <i className="fas fa-cloud-upload-alt fa-lg"></i>
+              {this.displayUser()}
+              {this.loginErrorMessage()}
+              <div data-toggle="modal" data-target="#saveModal">
+                <i className="fas fa-cloud-upload-alt fa-lg clickable"></i>
               </div>
               <div className="icon">
-                <i className="fas fa-undo" onClick={this.undo}></i>
+                <i className="fas fa-undo clickable" onClick={this.undo}></i>
               </div>
               <div data-toggle="modal" data-target="#defaultColorModal">
-                Base <div className="perle" style={{background: this.state.defaultColor}}></div>
+                Base <div className="perle clickable" style={{background: this.state.defaultColor}}></div>
               </div>
               <div data-toggle="modal" data-target="#nextColorModal">
-                Prochaine  <div className="perle" style={{background: this.state.nextColor}}></div>
+                Prochaine  <div className="perle clickable" style={{background: this.state.nextColor}}></div>
               </div>
             </Col>
           </Row>
         </Container>
         {this.displayModal("nextColorModal", this.handleChangeCompleteNextColor, "Prochaine perle")}
         {this.displayModal("defaultColorModal", this.handleChangeCompleteDefaultColor, "Couleur par défaut")}
+        {this.saveModal()}
       </div>
     )
   }

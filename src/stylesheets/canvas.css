@@ -1,0 +1,7 @@
+.fas{
+  margin-left: 10px;
+}
+
+.clickable:hover{
+  cursor: pointer;
+}

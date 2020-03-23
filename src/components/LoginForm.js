@@ -14,6 +14,9 @@ class LoginForm extends Component {
   }
 
   handleChange = (event) => {
+    this.props.updateUser({
+      loginError: false
+    })
     this.setState({
       [event.target.name]: event.target.value,
       loginErrorMessage: false
@@ -28,7 +31,7 @@ class LoginForm extends Component {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        username: this.state.username,
+        username: this.state.username.toLowerCase(),
         password: this.state.password
       })
     })
@@ -38,7 +41,8 @@ class LoginForm extends Component {
         this.props.updateUser({
           loggedIn: true,
           username: response.username,
-          displayName: response.displayName
+          displayName: response.displayName,
+          loginError: false
         })
         this.setState({
           redirectTo: '/'
@@ -47,6 +51,9 @@ class LoginForm extends Component {
     })
     .catch(error => {
       console.warn(`login error : ${error}`);
+      this.props.updateUser({
+        loginError: true
+      })
       this.setState({
         loginErrorMessage: true
       })
@@ -54,10 +61,10 @@ class LoginForm extends Component {
     })
   }
 
-  errorMessage = () => {
+  loginErrorMessage = () => {
     if (this.state.loginErrorMessage){
       return(
-        <div className="alert alert-danger col-3 col-ml-auto" role="alert">
+        <div className="alert alert-danger col-ml-auto" role="alert">
           Utilisateur / Mot de passe incorrect
         </div>
       )
@@ -65,37 +72,32 @@ class LoginForm extends Component {
   }
 
   render() {
-    if (this.state.redirectTo) {
-      return <Redirect to={{ pathname: this.state.redirectTo }} />
-    } else {
-      return (
-        <div>
-          <h4>Connexion</h4>
-          <form className="form-horizontal">
-            <div className="form-group">
-              <div className="col-3 col-ml-auto">
-                <label className="form-label" htmlFor="username">Nom d'utilisateur</label>
-              </div>
-              <div className="col-3 col-mr-auto">
-                <input className="form-input" type="text" id="username" name="username" placeholder="Username" value={this.state.username} onChange={this.handleChange}/>
-              </div>
+    return (
+      <div>
+        <form className="form-horizontal">
+          <div className="form-group">
+            <div className="col-ml-auto">
+              <label className="form-label" htmlFor="username">Nom d'utilisateur :</label>
             </div>
-            <div className="form-group">
-              <div className="col-3 col-ml-auto">
-                <label className="form-label" htmlFor="password">Mot de passe :</label>
-              </div>
-              <div className="col-3 col-mr-auto">
-                <input className="form-input" placeholder="password" type="password" name="password" value={this.state.password} onChange={this.handleChange}/>
-              </div>
+            <div className="col-3 col-mr-auto">
+              <input className="form-input" type="text" id="username" name="username" placeholder="Username" value={this.state.username} onChange={this.handleChange}/>
             </div>
-            {this.errorMessage()}
-            <div className="form-group ">
-              <button className="btn btn-primary col-1 col-mr-auto" onClick={this.handleSubmit} type="submit">Valider</button>
+          </div>
+          <div className="form-group">
+            <div className="col-ml-auto">
+              <label className="form-label" htmlFor="password">Mot de passe :</label>
             </div>
-          </form>
-        </div>
-      )
-    }
+            <div className="col-3 col-mr-auto">
+              <input className="form-input" placeholder="password" type="password" name="password" value={this.state.password} onChange={this.handleChange}/>
+            </div>
+          </div>
+          {this.loginErrorMessage()}
+          <div className="form-group ">
+            <button className="btn btn-primary col-mr-auto " onClick={this.handleSubmit} type="submit" data-dismiss="modal">Valider</button>
+          </div>
+        </form>
+      </div>
+    )
   }
 }
 
