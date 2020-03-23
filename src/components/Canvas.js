@@ -221,6 +221,7 @@ export default class Canvas extends Component {
             </Col>
 
             <Col className="col-3">
+              <p>{this.props.displayName}</p>
               <div className="icon" onClick={this.save}>
                 <i className="fas fa-cloud-upload-alt fa-lg"></i>
               </div>

@@ -72,18 +72,16 @@ app.listen(port, function () {
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 app.post('/login',
   passport.authenticate('local'),
   function(req, res) {
-    console.log("logged in", req.body.username);
     const userInfo = {
       status: '200',
-      username: req.body.username
+      username: req.body.username,
+      displayName: res.req.user.displayName
     }
     res.send(userInfo)
   });
-
 
 app.get("/", function(request, result){
   result.send("Welcome on the api root")
