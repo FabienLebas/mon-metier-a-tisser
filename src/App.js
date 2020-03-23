@@ -14,6 +14,8 @@ export default class App extends Component {
     this.state = {
       loggedIn: false,
       username: null,
+      displayName: null,
+      loginError: false,
       defaultMatrix: [
         ["default", "default", "default", "default", "default", "default", "default", "default", "default"],
         ["default", "default", "default", "default", "default", "default", "default", "default", "default"],
@@ -31,16 +33,31 @@ export default class App extends Component {
 
   updateUser = (userObject) => {
     console.log(`je lance updateUser ${userObject}`);
-    console.log(userObject.loggedIn);
     console.log(userObject.username);
+    console.log(userObject.displayName);
     this.setState(userObject)
+  }
+
+  logOut = () => {
+    this.setState({
+      username: null,
+      displayName: null
+    })
   }
 
   render(){
     return (
       <Router>
-        <Route exact path="/" render={(routerProps) => <Canvas matrix={this.state.defaultMatrix} user={this.state.username}></Canvas> }/>
-        <Route exact path="/login" render={(routerProps) => <LoginForm updateUser={this.updateUser} ></LoginForm>}/>
+        <Route exact path="/" render={(routerProps) =>
+          <Canvas
+            matrix={this.state.defaultMatrix}
+            user={this.state.username}
+            displayName={this.state.displayName}
+            logOut={this.logOut}
+            updateUser={this.updateUser}
+            loginError={this.state.loginError}
+            />}/>
+          <Route exact path="/login" render={(routerProps) => <LoginForm updateUser={this.updateUser}></LoginForm>}/>
       </Router>
     );
   }
