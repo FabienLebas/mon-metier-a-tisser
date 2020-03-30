@@ -42,16 +42,8 @@
     ]
   },
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
-  "main": "server.js",
+  "main": "index.js",
   "devDependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/FabienLebas/mon-metier-a-tisser.git"
-  },
   "author": "Fabien Lebas",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/FabienLebas/mon-metier-a-tisser/issues"
-  },
-  "homepage": "https://github.com/FabienLebas/mon-metier-a-tisser#readme"
+  "license": "ISC"
 }

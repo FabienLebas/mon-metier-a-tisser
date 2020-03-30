@@ -27,3 +27,11 @@ yarn.lock
 /server/package-lock.json
 
 /server/.foreverignore
+.env.development
+.env.production
+.gcloudignore
+server/.env.development
+server/.gcloudignore
+server/app-prod-back.yaml
+app-preprod-front.yaml
+app-prod-front.yaml

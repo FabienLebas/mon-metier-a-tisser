@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
-// import axios from 'axios'
 
 class LoginForm extends Component {
   constructor(props) {
@@ -25,7 +23,8 @@ class LoginForm extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault()
-    return fetch("http://localhost:4000/login", {
+    const baseUrlBack = process.env.REACT_APP_baseUrlBack;
+    return fetch(`${baseUrlBack}/login`, {
       method: 'POST',
       headers:{
         "Content-Type": "application/json"
