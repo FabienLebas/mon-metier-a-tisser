@@ -11,7 +11,8 @@ app.use(function(request, result, next) {
     const allowedOrigins = [
       'http://localhost:3000',
       'https://localhost:3000',
-      'http://localhost:4000'
+      'https://mon-metier-a-tisser.appspot.com',
+      'http://mon-metier-a-tisser.appspot.com'
      ];
     const origin = request.headers.origin;
     if (allowedOrigins.indexOf(origin) > -1) {
@@ -61,7 +62,7 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.json()); // for parsing application/json
 
 app.use(require("cookie-parser")());
-app.use(require('express-session')({ secret: 'gz§345GEZrtretz5432', resave: false, saveUninitialized: false }));
+app.use(require('express-session')({ secret: process.env.passportSecret, resave: false, saveUninitialized: false }));
 
 app.listen(port, function () {
   console.log("Server http listening on port:" + port);
