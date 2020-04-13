@@ -4,6 +4,7 @@ const passport = require('passport');
 const LocalStrategy = require("passport-local").Strategy;
 
 const users = require('./users.js');
+const getUsers = require('./api/getUsers.js');
 
 const port = process.env.PORT || 4000;
 
@@ -82,7 +83,13 @@ app.post('/login',
       displayName: res.req.user.displayName
     }
     res.send(userInfo)
-  });
+  }
+);
+
+app.get("/users", function(request, result){
+  getUsers()
+  .then(data => result.send(data))
+})
 
 app.get("/", function(request, result){
   result.send("Welcome on the api root")
