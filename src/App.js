@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 
 
 import Canvas from './components/Canvas';
-// import Login from './components/Login';
 import LoginForm from './components/LoginForm';
 
 export default class App extends Component {
@@ -57,7 +56,7 @@ export default class App extends Component {
             updateUser={this.updateUser}
             loginError={this.state.loginError}
             />}/>
-          <Route exact path="/login" render={(routerProps) => <LoginForm updateUser={this.updateUser}></LoginForm>}/>
+          <Route exact path="/login" render={(routerProps) => <LoginForm updateUser={this.updateUser}/>}/>
       </Router>
     );
   }

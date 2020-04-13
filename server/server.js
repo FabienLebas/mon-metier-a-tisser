@@ -5,6 +5,7 @@ const LocalStrategy = require("passport-local").Strategy;
 
 const users = require('./users.js');
 const getUsers = require('./api/getUsers.js');
+const createNewUser = require('./api/createNewUser.js');
 
 const port = process.env.PORT || 4000;
 
@@ -79,12 +80,19 @@ app.post('/login',
   function(req, res) {
     const userInfo = {
       status: '200',
-      username: req.body.username,
-      displayName: res.req.user.displayName
+      username: req.body.username
     }
     res.send(userInfo)
   }
 );
+
+app.put('/login', function(request, result){
+  createNewUser(request.body.username, request.body.password)
+  .then(userInfo => result.send({
+    status: '200',
+    username: request.body.username
+  }))
+});
 
 app.get("/users", function(request, result){
   getUsers()
