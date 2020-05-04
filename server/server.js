@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const passport = require('passport');
 const LocalStrategy = require("passport-local").Strategy;
+const crypto = require('crypto');
 
 const users = require('./users.js');
 const getUsers = require('./api/getUsers.js');
@@ -35,10 +36,13 @@ app.use(function(request, result, next) {
 // will be set at `req.user` in route handlers after authentication.
 passport.use(new LocalStrategy(
   function(username, password, cb) {
+    console.log("password : " + password);
+    const hash = crypto.createHmac('sha256', password).digest('hex');
+    console.log("hash : " + hash);
     users.findByUsername(username, function(err, user) {
       if (err) { return cb(err); }
       if (!user) { return cb(null, false); }
-      if (user.password !== password) { return cb(null, false);}
+      if (user.password !== hash) { return cb(null, false);}
       return cb(null, user);
     });
   }));
@@ -87,7 +91,10 @@ app.post('/login',
 );
 
 app.put('/login', function(request, result){
-  createNewUser(request.body.username, request.body.password)
+  console.log("password : " + request.body.password);
+  const hash = crypto.createHmac('sha256', request.body.password).digest('hex');
+  console.log("hash : " + hash);
+  createNewUser(request.body.username, hash)
   .then(userInfo => result.send({
     status: '200',
     username: request.body.username
