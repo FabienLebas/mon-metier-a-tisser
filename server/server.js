@@ -7,6 +7,7 @@ const crypto = require('crypto');
 const users = require('./users.js');
 const getUsers = require('./api/getUsers.js');
 const createNewUser = require('./api/createNewUser.js');
+const createCanvas = require('./api/createCanvas.js');
 
 const port = process.env.PORT || 4000;
 
@@ -104,6 +105,15 @@ app.put('/login', function(request, result){
 app.get("/users", function(request, result){
   getUsers()
   .then(data => result.send(data))
+})
+
+app.put("/canvas", function(request, result){
+  createCanvas(request.body.username, request.body.details, request.body.canvasName, request.body.defaultColor)
+  .then(response => result.json(response))
+  .catch(error => {
+    console.warn(`Error in PUT /canvas username ${request.body.username}, canvasName ${request.body.canvasName} : ${error}`);
+    result.status("400").send(error);
+  })
 })
 
 app.get("/", function(request, result){

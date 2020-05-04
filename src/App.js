@@ -11,9 +11,7 @@ export default class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      loggedIn: false,
       username: null,
-      displayName: null,
       loginError: false,
       defaultMatrix: [
         ["default", "default", "default", "default", "default", "default", "default", "default", "default"],
@@ -31,9 +29,6 @@ export default class App extends Component {
   }
 
   updateUser = (userObject) => {
-    console.log(`je lance updateUser ${userObject}`);
-    console.log(userObject.username);
-    console.log(userObject.displayName);
     this.setState(userObject)
   }
 
