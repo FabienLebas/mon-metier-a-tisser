@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
-class LoginForm extends Component {
+export default class LoginForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       username: '',
       password: '',
-      redirectTo: null,
-      loginErrorMessage: null
+      createNewUSer: false,
+      loginErrorMessage: null,
     }
   }
 
@@ -24,11 +24,13 @@ class LoginForm extends Component {
   handleSubmit = (event) => {
     event.preventDefault()
     const baseUrlBack = process.env.REACT_APP_baseUrlBack;
+    let createOrLogin = 'POST';
+    if (this.state.createNewUSer){
+      createOrLogin = 'PUT'
+    }
     return fetch(`${baseUrlBack}/login`, {
-      method: 'POST',
-      headers:{
-        "Content-Type": "application/json"
-      },
+      method: createOrLogin,
+      headers:{"Content-Type": "application/json"},
       body: JSON.stringify({
         username: this.state.username.toLowerCase(),
         password: this.state.password
@@ -39,8 +41,7 @@ class LoginForm extends Component {
       if (response.status === '200') {
         this.props.updateUser({
           loggedIn: true,
-          username: response.username,
-          displayName: response.displayName,
+          username: response,
           loginError: false
         })
         this.setState({
@@ -56,7 +57,6 @@ class LoginForm extends Component {
       this.setState({
         loginErrorMessage: true
       })
-
     })
   }
 
@@ -70,16 +70,62 @@ class LoginForm extends Component {
     }
   }
 
+  activateNewUserSection = () => {
+    const newValue = !this.state.createNewUSer
+    this.setState({
+      createNewUSer: newValue
+    })
+  }
+
+  displayNewUserSection = () => {
+    if (this.state.createNewUSer){
+      return(
+        <div>
+          <div className="col-ml-auto">
+            <label className="form-label" htmlFor="password">Vérification du mot de passe :</label>
+          </div>
+          <div className="col-3 col-mr-auto">
+            <input className="form-input" placeholder="mot de passe" type="password" name="password" value={this.state.passwordCheck} onChange={this.checkPassword}/>
+          </div>
+        </div>
+      )
+    }
+  }
+
+  checkPassword = (event) => {
+    this.setState({
+      passwordCheck: event.target.value
+    })
+  }
+
+  displayValidationButton = () => {
+    if (!this.state.createNewUSer){
+      return(
+        <div className="form-group ">
+          <button className="btn btn-primary col-mr-auto " onClick={this.handleSubmit} type="submit" data-dismiss="modal">Connecter</button>
+          <p onClick={this.activateNewUserSection}>Nouvel utilisateur</p>
+        </div>
+      )
+    } else {
+      return(
+        <div className="form-group ">
+          <button disabled={this.state.password !== this.state.passwordCheck} className="btn btn-primary col-mr-auto " onClick={this.handleSubmit} type="submit" data-dismiss="modal">Nouvel utilisateur</button>
+          <p onClick={this.activateNewUserSection}>Connecter un utilisateur existant</p>
+        </div>
+      )
+    }
+  }
+
   render() {
     return (
       <div>
         <form className="form-horizontal">
           <div className="form-group">
             <div className="col-ml-auto">
-              <label className="form-label" htmlFor="username">Nom d'utilisateur :</label>
+              <label className="form-label" htmlFor="username">Email</label>
             </div>
             <div className="col-3 col-mr-auto">
-              <input className="form-input" type="text" id="username" name="username" placeholder="Username" value={this.state.username} onChange={this.handleChange}/>
+              <input className="form-input" type="text" id="username" name="username" placeholder="votre email" value={this.state.username} onChange={this.handleChange}/>
             </div>
           </div>
           <div className="form-group">
@@ -87,17 +133,14 @@ class LoginForm extends Component {
               <label className="form-label" htmlFor="password">Mot de passe :</label>
             </div>
             <div className="col-3 col-mr-auto">
-              <input className="form-input" placeholder="password" type="password" name="password" value={this.state.password} onChange={this.handleChange}/>
+              <input className="form-input" placeholder="mot de passe" type="password" name="password" value={this.state.password} onChange={this.handleChange}/>
             </div>
+            {this.displayNewUserSection()}
           </div>
           {this.loginErrorMessage()}
-          <div className="form-group ">
-            <button className="btn btn-primary col-mr-auto " onClick={this.handleSubmit} type="submit" data-dismiss="modal">Valider</button>
-          </div>
+          {this.displayValidationButton()}
         </form>
       </div>
     )
   }
 }
-
-export default LoginForm
