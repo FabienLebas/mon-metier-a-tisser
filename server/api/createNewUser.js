@@ -6,7 +6,7 @@ function createNewUser(username, password){
     user: process.env.user,
     password: process.env.password,
     database: process.env.database
-})
+  })
   client.connect();
   return client.query("INSERT INTO users (username, email, password) VALUES ($1, $1, $2) RETURNING username", [username, password])
   .then(result => {
