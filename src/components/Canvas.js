@@ -14,7 +14,8 @@ export default class Canvas extends Component {
       nextColor: "gold",
       topEmptySpots: [1, 2, 3, 4, 5, 6],
       history: [],
-      loginErrorMessage: false
+      loginErrorMessage: false,
+      canvasName: ''
     }
   }
 
@@ -175,6 +176,13 @@ export default class Canvas extends Component {
     this.setState({ defaultColor: color.hex });
   };
 
+  handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value,
+    })
+  }
+
+
   displayModal = (modalName, functionWhenSelected, textTitle) => {
     const label = modalName + "Label";
     return(
@@ -238,7 +246,7 @@ export default class Canvas extends Component {
                       <label className="form-label" htmlFor="canvasName">Nom du bracelet :</label>
                     </div>
                     <div className="col-3 col-mr-auto">
-                      <input className="form-input" type="text" id="canvasName" name="canvasName" placeholder="nom de la création" value={this.state.canvasName} onChange={this.handleChangeCanvasName}/>
+                      <input className="form-input" type="text" id="canvasName" name="canvasName" placeholder="nom de la création" value={this.state.canvasName} onChange={this.handleChange}/>
                     </div>
                   </div>
                   <div className="form-group ">

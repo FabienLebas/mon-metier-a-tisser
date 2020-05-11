@@ -37,9 +37,7 @@ app.use(function(request, result, next) {
 // will be set at `req.user` in route handlers after authentication.
 passport.use(new LocalStrategy(
   function(username, password, cb) {
-    console.log("password : " + password);
     const hash = crypto.createHmac('sha256', password).digest('hex');
-    console.log("hash : " + hash);
     users.findByUsername(username, function(err, user) {
       if (err) { return cb(err); }
       if (!user) { return cb(null, false); }
@@ -92,9 +90,7 @@ app.post('/login',
 );
 
 app.put('/login', function(request, result){
-  console.log("password : " + request.body.password);
   const hash = crypto.createHmac('sha256', request.body.password).digest('hex');
-  console.log("hash : " + hash);
   createNewUser(request.body.username, hash)
   .then(userInfo => result.send({
     status: '200',
