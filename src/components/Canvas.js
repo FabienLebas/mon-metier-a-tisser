@@ -263,10 +263,6 @@ export default class Canvas extends Component {
 
   saveCanvas = () => {
     const baseUrlBack = process.env.REACT_APP_baseUrlBack;
-    console.log("username : " + this.props.user.username);
-    console.log("canvasName : " + this.state.canvasName);
-    console.log("defaultColor : " + this.state.defaultColor);
-    console.log("details : " + this.state.matrix);
     return fetch(`${baseUrlBack}/canvas`, {
       method: 'PUT',
       headers: {
@@ -318,7 +314,6 @@ export default class Canvas extends Component {
   render(){
     return(
       <div>
-        <h2 className="text-center">Création</h2>
         <Container>
           <Row>
             <Col className="offset-1">

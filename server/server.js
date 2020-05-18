@@ -8,6 +8,7 @@ const users = require('./users.js');
 const getUsers = require('./api/getUsers.js');
 const createNewUser = require('./api/createNewUser.js');
 const createCanvas = require('./api/createCanvas.js');
+const getLibrary = require('./api/getLibrary.js');
 
 const port = process.env.PORT || 4000;
 
@@ -101,6 +102,15 @@ app.put('/login', function(request, result){
 app.get("/users", function(request, result){
   getUsers()
   .then(data => result.send(data))
+})
+
+app.get("/users/:username/canvas", function(request, result){
+  getLibrary(request.params.username)
+  .then(response => result.json(response))
+  .catch(error => {
+    console.warn(`Error when retrieving canvas library for user ${request.params.username} : ${error}`);
+    result.status("400").send(error);
+  })
 })
 
 app.put("/canvas", function(request, result){

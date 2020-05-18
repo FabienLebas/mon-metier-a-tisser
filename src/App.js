@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import Canvas from './components/Canvas';
 import LoginForm from './components/LoginForm';
+import Library from './components/Library';
 
 export default class App extends Component {
   constructor(props){
@@ -39,19 +40,35 @@ export default class App extends Component {
     })
   }
 
+  loadLibrary = () => {
+    if (this.state.username){
+      return(
+        <Library
+          user={this.state.username}
+          displayName={this.state.displayName}
+        />
+      )
+    }
+  }
+
   render(){
     return (
       <Router>
+        <h2 className="text-center">Oh happy perles !</h2>
         <Route exact path="/" render={(routerProps) =>
-          <Canvas
-            matrix={this.state.defaultMatrix}
-            user={this.state.username}
-            displayName={this.state.displayName}
-            logOut={this.logOut}
-            updateUser={this.updateUser}
-            loginError={this.state.loginError}
-            />}/>
-          <Route exact path="/login" render={(routerProps) => <LoginForm updateUser={this.updateUser}/>}/>
+          <div>
+            {this.loadLibrary()}
+            <Canvas
+              matrix={this.state.defaultMatrix}
+              user={this.state.username}
+              displayName={this.state.displayName}
+              logOut={this.logOut}
+              updateUser={this.updateUser}
+              loginError={this.state.loginError}
+            />
+          </div>
+        }/>
+        <Route exact path="/login" render={(routerProps) => <LoginForm updateUser={this.updateUser}/>}/>
       </Router>
     );
   }
