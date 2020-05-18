@@ -14,7 +14,8 @@ export default class Canvas extends Component {
       nextColor: "gold",
       topEmptySpots: [1, 2, 3, 4, 5, 6],
       history: [],
-      loginErrorMessage: false
+      loginErrorMessage: false,
+      canvasName: ''
     }
   }
 
@@ -87,6 +88,12 @@ export default class Canvas extends Component {
   handleChangeNextColor = (event) => {
     this.setState({
       nextColor: event.target.value
+    })
+  }
+
+  handleChangeCanvasName = (event) => {
+    this.setState({
+      canvasName: event.target.value
     })
   }
 
@@ -169,6 +176,13 @@ export default class Canvas extends Component {
     this.setState({ defaultColor: color.hex });
   };
 
+  handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value,
+    })
+  }
+
+
   displayModal = (modalName, functionWhenSelected, textTitle) => {
     const label = modalName + "Label";
     return(
@@ -194,24 +208,77 @@ export default class Canvas extends Component {
   }
 
   saveModal = () => {
-    return(
-      <div className="modal fade" id="saveModal" tabIndex="-1" role="dialog" aria-labelledby="labelSave" aria-hidden="true">
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Connexion</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div className="modal-body">
-              <p>Pour sauvegarder, j'ai besoin d'un compte utilisateur</p>
-              <LoginForm updateUser={this.props.updateUser} loginErrorMessage={this.loginErrorMessage}/>
+    if (this.props.user === null){
+      return(
+        <div className="modal fade" id="saveModal" tabIndex="-1" role="dialog" aria-labelledby="labelSave" aria-hidden="true">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Connexion</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <p>Pour sauvegarder, j'ai besoin d'un compte utilisateur</p>
+                <LoginForm updateUser={this.props.updateUser} loginErrorMessage={this.loginErrorMessage}/>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    )
+      )
+    } else {
+      return(
+        <div className="modal fade" id="saveModal" tabIndex="-1" role="dialog" aria-labelledby="labelSave" aria-hidden="true">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Sauvegarde</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <p>Utilisateur : {this.props.user.username}</p>
+                <form className="form-horizontal">
+                  <div className="form-group">
+                    <div className="col-ml-auto">
+                      <label className="form-label" htmlFor="canvasName">Nom du bracelet :</label>
+                    </div>
+                    <div className="col-3 col-mr-auto">
+                      <input className="form-input" type="text" id="canvasName" name="canvasName" placeholder="nom de la création" value={this.state.canvasName} onChange={this.handleChange}/>
+                    </div>
+                  </div>
+                  <div className="form-group ">
+                    <button className="btn btn-primary col-mr-auto " onClick={this.saveCanvas} type="submit" data-dismiss="modal">Sauvegarder</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+  }
+
+  saveCanvas = () => {
+    const baseUrlBack = process.env.REACT_APP_baseUrlBack;
+    console.log("username : " + this.props.user.username);
+    console.log("canvasName : " + this.state.canvasName);
+    console.log("defaultColor : " + this.state.defaultColor);
+    console.log("details : " + this.state.matrix);
+    return fetch(`${baseUrlBack}/canvas`, {
+      method: 'PUT',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: this.props.user.username,
+        details: this.state.matrix.join(","),
+        canvasName: this.state.canvasName,
+        defaultColor: this.state.defaultColor
+      })
+    })
   }
 
   emptySpot = (key) => {
@@ -231,7 +298,7 @@ export default class Canvas extends Component {
     if (this.props.user){
       return (
         <div className="row">
-          <p>{this.props.displayName}</p>
+          <p>{this.props.user.username}</p>
           <i className="fas fa-power-off clickable" aria-hidden="true" onClick={this.props.logOut}></i>
         </div>
       )

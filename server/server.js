@@ -7,6 +7,7 @@ const crypto = require('crypto');
 const users = require('./users.js');
 const getUsers = require('./api/getUsers.js');
 const createNewUser = require('./api/createNewUser.js');
+const createCanvas = require('./api/createCanvas.js');
 
 const port = process.env.PORT || 4000;
 
@@ -36,9 +37,7 @@ app.use(function(request, result, next) {
 // will be set at `req.user` in route handlers after authentication.
 passport.use(new LocalStrategy(
   function(username, password, cb) {
-    console.log("password : " + password);
     const hash = crypto.createHmac('sha256', password).digest('hex');
-    console.log("hash : " + hash);
     users.findByUsername(username, function(err, user) {
       if (err) { return cb(err); }
       if (!user) { return cb(null, false); }
@@ -91,9 +90,7 @@ app.post('/login',
 );
 
 app.put('/login', function(request, result){
-  console.log("password : " + request.body.password);
   const hash = crypto.createHmac('sha256', request.body.password).digest('hex');
-  console.log("hash : " + hash);
   createNewUser(request.body.username, hash)
   .then(userInfo => result.send({
     status: '200',
@@ -104,6 +101,15 @@ app.put('/login', function(request, result){
 app.get("/users", function(request, result){
   getUsers()
   .then(data => result.send(data))
+})
+
+app.put("/canvas", function(request, result){
+  createCanvas(request.body.username, request.body.details, request.body.canvasName, request.body.defaultColor)
+  .then(response => result.json(response))
+  .catch(error => {
+    console.warn(`Error in PUT /canvas username ${request.body.username}, canvasName ${request.body.canvasName} : ${error}`);
+    result.status("400").send(error);
+  })
 })
 
 app.get("/", function(request, result){

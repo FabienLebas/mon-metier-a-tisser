@@ -12,9 +12,6 @@ export default class LoginForm extends Component {
   }
 
   handleChange = (event) => {
-    this.props.updateUser({
-      loginError: false
-    })
     this.setState({
       [event.target.name]: event.target.value,
       loginErrorMessage: false
@@ -44,9 +41,9 @@ export default class LoginForm extends Component {
           username: response,
           loginError: false
         })
-        this.setState({
-          redirectTo: '/'
-        })
+        // this.setState({
+        //   redirectTo: '/'
+        // })
       }
     })
     .catch(error => {
