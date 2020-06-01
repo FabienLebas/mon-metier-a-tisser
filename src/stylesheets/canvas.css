@@ -5,3 +5,13 @@
 .clickable:hover{
   cursor: pointer;
 }
+
+.perle-canvas{
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-right: 2px;
+  margin-left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%
+}

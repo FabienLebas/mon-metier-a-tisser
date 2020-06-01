@@ -103,28 +103,28 @@ export default class Canvas extends Component {
         return (
           <Row key={indexLine}>
             {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-            <div className="perle" onClick={(event) => this.addLine("top")}><i className="fas perle fa-arrow-circle-up clickable"></i></div>
+            <div className="perle-canvas" onClick={(event) => this.addLine("top")}><i className="fas perle-canvas fa-arrow-circle-up clickable"></i></div>
           </Row>
         )
       case 1:
         return(
           <Row key={indexLine}>
             {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-            <div className="perle" onClick={(event) => this.removeLine("top")}><i className="fas perle fa-arrow-circle-down clickable"></i></div>
+            <div className="perle-canvas" onClick={(event) => this.removeLine("top")}><i className="fas perle-canvas fa-arrow-circle-down clickable"></i></div>
           </Row>
         )
       case this.state.matrix.length - 2:
         return(
           <Row key={indexLine}>
             {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-            <div className="perle" onClick={(event) => this.removeLine("bottom")}><i className="fas perle fa-arrow-circle-up clickable"></i></div>
+            <div className="perle-canvas" onClick={(event) => this.removeLine("bottom")}><i className="fas perle-canvas fa-arrow-circle-up clickable"></i></div>
           </Row>
         )
       case this.state.matrix.length -1:
         return(
           <Row key={indexLine}>
             {line.map((perleColor, indexColumn) => this.drawPerle(perleColor, indexColumn, indexLine))}
-            <div className="perle" onClick={(event) => this.addLine("bottom")}><i className="fas perle fa-arrow-circle-down clickable"></i></div>
+            <div className="perle-canvas" onClick={(event) => this.addLine("bottom")}><i className="fas perle-canvas fa-arrow-circle-down clickable"></i></div>
           </Row>
         )
       default:
@@ -142,7 +142,7 @@ export default class Canvas extends Component {
       myColor = perleColor;
     }
     return(
-      <div key={indexColumn} style={{background: myColor}} className="perle" onClick={(event) => this.changePerleColor(indexColumn, indexLine, this.state.nextColor, true)}></div>
+      <div key={indexColumn} style={{background: myColor}} className="perle-canvas" onClick={(event) => this.changePerleColor(indexColumn, indexLine, this.state.nextColor, true)}></div>
     )
   }
 
@@ -270,7 +270,7 @@ export default class Canvas extends Component {
       },
       body: JSON.stringify({
         username: this.props.user.username,
-        details: this.state.matrix.join(","),
+        details: JSON.stringify(this.state.matrix),
         canvasName: this.state.canvasName,
         defaultColor: this.state.defaultColor
       })
@@ -279,7 +279,7 @@ export default class Canvas extends Component {
 
   emptySpot = (key) => {
     return(
-      <div key={key} className="perle"></div>
+      <div key={key} className="perle-canvas"></div>
     )
   }
 
@@ -320,11 +320,11 @@ export default class Canvas extends Component {
               <Row>
                 <Col >
                   <Row>
-                    <div className="perle" onClick={(event) => this.addColumn("left")}><i className="fas fa-arrow-circle-left clickable"></i></div>
-                    <div className="perle" onClick={(event) => this.removeColumn("left")}><i className="fas perle fa-arrow-circle-right clickable"></i></div>
+                    <div className="perle-canvas" onClick={(event) => this.addColumn("left")}><i className="fas fa-arrow-circle-left clickable"></i></div>
+                    <div className="perle-canvas" onClick={(event) => this.removeColumn("left")}><i className="fas perle-canvas fa-arrow-circle-right clickable"></i></div>
                     {this.state.topEmptySpots.map(e => this.emptySpot(e) )}
-                    <div className="perle" onClick={(event) => this.removeColumn("right")}><i className="fas perle fa-arrow-circle-left clickable"></i></div>
-                    <div className="perle" onClick={(event) => this.addColumn("right")}><i className="fas perle fa-arrow-circle-right clickable"></i></div>
+                    <div className="perle-canvas" onClick={(event) => this.removeColumn("right")}><i className="fas perle-canvas fa-arrow-circle-left clickable"></i></div>
+                    <div className="perle-canvas" onClick={(event) => this.addColumn("right")}><i className="fas perle-canvas fa-arrow-circle-right clickable"></i></div>
                   </Row>
                 </Col>
               </Row>
@@ -341,10 +341,10 @@ export default class Canvas extends Component {
                 <i className="fas fa-undo clickable" onClick={this.undo}></i>
               </div>
               <div data-toggle="modal" data-target="#defaultColorModal">
-                Base <div className="perle clickable" style={{background: this.state.defaultColor}}></div>
+                Base <div className="perle-canvas clickable" style={{background: this.state.defaultColor}}></div>
               </div>
               <div data-toggle="modal" data-target="#nextColorModal">
-                Prochaine  <div className="perle clickable" style={{background: this.state.nextColor}}></div>
+                Prochaine  <div className="perle-canvas clickable" style={{background: this.state.nextColor}}></div>
               </div>
             </Col>
           </Row>

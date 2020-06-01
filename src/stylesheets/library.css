@@ -1,0 +1,49 @@
+.btn-floating{
+  background: #4285f4;
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  padding: 0;
+  margin: 10px;
+  overflow: hidden;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15);
+  box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15);
+  -webkit-transition: all .2s ease-in-out;
+  transition: all .2s ease-in-out;
+  width: 35px;
+  height: 35px;
+}
+
+.btn-floating i {
+    display: inline-block!important;
+    width: 35px;
+    color: #fff;
+    text-align: center;
+    line-height: 35px;
+    font-size: 1.25rem;
+}
+
+.fas{
+  margin-left: 0px;
+}
+
+.perle-library{
+  margin-top: 1px;
+  margin-bottom: 1px;
+  margin-right: 1px;
+  margin-left: 1px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%
+}
+
+.row-library{
+  margin-left: 5px;
+}
+
+.card{
+  padding-top: 5px;
+}
